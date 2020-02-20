@@ -1,5 +1,8 @@
+# coding: utf-8
+
 import requests
 import random
+import sys
 
 #define user-agent
 with open("user-agents.txt", "r") as usera:
@@ -22,114 +25,68 @@ for num in range(1, 200):
 
 proxy = proxies[0]
 
-consulta = raw_input("Pesquisa >>> ")
-num = input("Numero de resultados: ")
+consulta = raw_input("Pesquisa -> ")
+try:
+	num = int(input("Numero de resultados -> "))
+except NameError:
+	sys.exit('Somente numeros são aceitos')
 pagina = 0
+
+
 
 while True:
 	useragent = y[random]
 	try:
-		print (">_ Usando proxy %s " % proxy),
+		print (">_ Usando Proxy: %s" % proxy),
 		headers = {'User-Agent': useragent}
 		parametros = {'q' : consulta, 'start':pagina, 'num':num }
 		resposta = requests.get('http://www.google.com/search', params=parametros, timeout = 20, headers=headers, proxies={"http" : proxy}) #
 		msg = "Our systems have detected unusual traffic from your computer network"
 		msg2 = "support.google.com/websearch/answer"
 		if msg in resposta.text or msg2 in resposta.text:
-			print "O Google detectou o bot..."
+			print "-> Proxy Detectado Pelo Google"
 			try:
 				proxy = proxies[proxies.index(proxy)+1]
 				continue
 			except IndexError:
-				print ">_ Todos os Proxies testados"			
+				print "-> Todos os Proxies testados"			
 				break
 			else:
 				continue
 		divs = resposta.text
 		divs = divs.split('<div><a class="')
 		if len(divs) == 0:
-			print "!! Erro no Proxy"
+			print "-> Erro no Proxy"
 			
 			try:
 				proxy = proxies[proxies.index(proxy)+1]
 				continue
 			except IndexError:
-				print ">_ Todos os Proxies testados"			
+				print "-> Todos os Proxies testados"			
 				break
 			else:
 				continue
 		print
 		for div in divs:
-			
-			div = div.split('href="')[1];
-			div = div.strip('/url?q=');
-			div = div.split('&amp;')[0] 
-			div = div.strip('num=%s' % num)
-			#div = div.strip('aclk?sa=l')
-			if 'http' in div: 
-				print div
+			if 'google.com' not in div:
+				div = div.split('href="')[1];
+				div = div.strip('/url?q=');
+				div = div.split('&amp')[0] 
+				if 'http' in div: 
+					print div
 			else: 
-				print "!! Erro no Proxy"
-			#	continue
-			#break
-		#else:
-			#proxy = proxies[proxies.index(proxy)+1]
-			#continue		
+				print "!! Erro na Resposta "
+				proxy = proxies[proxies.index(proxy)+1]
+				continue		
 		break
-		
-	except requests.exceptions.ConnectTimeout:
-		try:
-			print 'Timed Out...'
-			proxy = proxies[proxies.index(proxy)+1]
-			continue
-		except IndexError:
-			print ">_ Todos os Proxies testados"			
-			break
-		else:
-			continue
-	except requests.exceptions.ProxyError:
-		try:
-			proxy = proxies[proxies.index(proxy)+1]
-			continue
-		except IndexError:
-			print ">_ Todos os Proxies testados"			
-			break
-		else:
-			continue
-	except requests.exceptions.ConnectionError:
-		try:
-			proxy = proxies[proxies.index(proxy)+1]
-			continue
-		except IndexError:
-			print ">_ Todos os Proxies testados"			
-			break
-		else:
-			continue
-	except requests.exceptions.ReadTimeout:
-		try:
-			print 'Timed Out...'
-			proxy = proxies[proxies.index(proxy)+1]
-			continue
-		except IndexError:
-			print ">_ Todos os Proxies testados"			
-			break
-		else:
-			continue
-	except requests.exceptions.TooManyRedirects:
-		try:
-			proxy = proxies[proxies.index(proxy)+1]
-			continue
-		except IndexError:
-			print ">_ Todos os Proxies testados"			
-			break
-		else:
-			continue
+	
 	except AttributeError:
 		break
 	except IndexError:
 		proxy = proxies[proxies.index(proxy)+1]
 		continue
-	except Exception as e:
-		print type(e)
+	except Exception as erro:
+		error = str(type(erro))
+		print "-> " + error.split("<class 'requests.exceptions.")[1].split("'>")[0]
 		proxy = proxies[proxies.index(proxy)+1]
 		continue
