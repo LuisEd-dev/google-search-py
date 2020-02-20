@@ -4,6 +4,14 @@ import requests
 import random
 import sys
 
+banner = '''\033[01m
+ _____             _         _____                 _   
+|   __|___ ___ ___| |___ ___|   __|___ ___ ___ ___| |_ 
+|  |  | . | . | . | | -_|___|__   | -_| .'|  _|  _|   |
+|_____|___|___|_  |_|___|   |_____|___|__,|_| |___|_|_|
+              |___|                       by LuisEd-dev
+\033[0m'''
+
 #define user-agent
 with open("user-agents.txt", "r") as usera:
 	x = usera.read()
@@ -25,14 +33,14 @@ for num in range(1, 200):
 
 proxy = proxies[0]
 
+print banner
+
 consulta = raw_input("Pesquisa -> ")
 try:
 	num = int(input("Numero de resultados -> "))
 except NameError:
 	sys.exit('Somente numeros são aceitos')
 pagina = 0
-
-
 
 while True:
 	useragent = y[random]
