@@ -35,24 +35,24 @@ proxy = proxies[0]
 
 print banner
 
-consulta = raw_input("Pesquisa -> ")
+consulta = raw_input("\033[01mPesquisa -> \033[0m")
 try:
-	num = int(input("Numero de resultados -> "))
+	num = int(input("\033[01mNumero de resultados -> \033[0m"))
 except NameError:
-	sys.exit('Somente numeros são aceitos')
+	sys.exit('\033[01;31mSomente numeros são aceitos\033[0m')
 pagina = 0
 
 while True:
 	useragent = y[random]
 	try:
-		print (">_ Usando Proxy: %s" % proxy),
+		print (" >_ Usando Proxy: \033[4m%s\033[0m" % proxy),
 		headers = {'User-Agent': useragent}
 		parametros = {'q' : consulta, 'start':pagina, 'num':num }
-		resposta = requests.get('http://www.google.com/search', params=parametros, timeout = 20, headers=headers, proxies={"http" : proxy}) #
+		resposta = requests.get('http://www.google.com/search', params=parametros, timeout = 30, headers=headers, proxies={"http" : proxy}) #
 		msg = "Our systems have detected unusual traffic from your computer network"
 		msg2 = "support.google.com/websearch/answer"
 		if msg in resposta.text or msg2 in resposta.text:
-			print "-> Proxy Detectado Pelo Google"
+			print "-> \033[31mProxy Detectado Pelo Google\033[0m"
 			try:
 				proxy = proxies[proxies.index(proxy)+1]
 				continue
@@ -64,7 +64,7 @@ while True:
 		divs = resposta.text
 		divs = divs.split('<div><a class="')
 		if len(divs) == 0:
-			print "-> Erro no Proxy"
+			print "-> \033[31mErro no Proxy\033[0m"
 			
 			try:
 				proxy = proxies[proxies.index(proxy)+1]
@@ -79,12 +79,11 @@ while True:
 			if 'google.com' not in div:
 				div = div.split('href="')[1];
 				div = div.strip('/url?q=');
-				div = div.split('&amp')[0] 
+				div = div.split('&amp;')[0] 
 				if 'http' in div: 
 					print div
 			else: 
-				print "!! Erro na Resposta "
-				proxy = proxies[proxies.index(proxy)+1]
+				print "\033[31m!! Erro na Resposta \033[0m"
 				continue		
 		break
 	
@@ -95,6 +94,6 @@ while True:
 		continue
 	except Exception as erro:
 		error = str(type(erro))
-		print "-> " + error.split("<class 'requests.exceptions.")[1].split("'>")[0]
+		print "-> \033[31m" + error.split("<class 'requests.exceptions.")[1].split("'>")[0] + "\033[0m"
 		proxy = proxies[proxies.index(proxy)+1]
 		continue
