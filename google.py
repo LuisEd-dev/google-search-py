@@ -82,8 +82,6 @@ while True:
 				print '\033[32m'+ div + '\033[0m'
 			except:
 				continue
-				#	print "-> \033[31mErro na Resposta \033[0m"
-				#	raise IndexError
 		break
 	
 	except AttributeError:
