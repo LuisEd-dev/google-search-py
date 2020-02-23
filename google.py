@@ -48,7 +48,7 @@ while True:
 		print (" >_ Usando Proxy: \033[4m%s\033[0m" % proxy),
 		headers = {'User-Agent': useragent}
 		parametros = {'q' : consulta, 'start':pagina, 'num':num }
-		resposta = requests.get('http://www.google.com/search', params=parametros, timeout = 30, headers=headers, proxies={"http" : proxy}) #
+		resposta = requests.get('http://www.google.com/search', params=parametros, timeout = 30, headers=headers, proxies={"http" : proxy}) #, proxies={"http" : proxy}
 		msg = "Our systems have detected unusual traffic from your computer network"
 		msg2 = "support.google.com/websearch/answer"
 		if msg in resposta.text or msg2 in resposta.text:
@@ -76,15 +76,14 @@ while True:
 				continue
 		print
 		for div in divs:
-			if 'google.com' not in div:
-				div = div.split('href="')[1];
-				div = div.strip('/url?q=');
-				div = div.split('&amp;')[0] 
-				if 'http' in div: 
-					print div
-			else: 
-				print "\033[31m!! Erro na Resposta \033[0m"
-				continue		
+			try:
+				div = div.split('href="/url?q=')[1]
+				div = div.split('&amp;')[0]
+				print '\033[32m'+ div + '\033[0m'
+			except:
+				continue
+				#	print "-> \033[31mErro na Resposta \033[0m"
+				#	raise IndexError
 		break
 	
 	except AttributeError:
